@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Treino para Iniciantes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A tab-based navigation SPA. The main sections (Warm-up, Main Workout, Cool-down, Progression) are presented as tabs for easy access, preventing overwhelming the user with a long scroll. The 'Main Workout' section uses an accordion/card system, where each exercise can be expanded individually. This focuses the user's attention. A visual timeline for progression makes the long-term plan tangible and motivating. This structure was chosen to transform the static text document into a guided, interactive tool, which is more engaging and less intimidating for a beginner. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Workout Structure -> Goal: Organize/Inform -> Viz: Tab Navigation -> Interaction: Click to switch content panes -> Justification: Improves usability and information hierarchy -> Library: Vanilla JS.
+        - Report Info: Main Exercises -> Goal: Organize/Inform -> Viz: Interactive Accordion Cards -> Interaction: Click to expand/collapse exercise details, Clickable video links added for visual guidance. -> Justification: Keeps the UI clean, allows user to focus on one exercise at a time, provides external resources for correct form. -> Library: Vanilla JS.
+        - Report Info: Progression Plan -> Goal: Show Change -> Viz: HTML/CSS Timeline -> Interaction: None (static visual) -> Justification: Turns a text list into a motivating visual roadmap -> Library: HTML/CSS with Tailwind.
+        - Report Info: General Text (intro, tips) -> Goal: Inform -> Viz: Styled text blocks with icons -> Interaction: None -> Justification: Clear and readable presentation -> Library: HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #402E32;
+        }
+        .tab-active {
+            background-color: #D4A373;
+            color: #FEFAE0;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            background-color: #EFEBE5;
+            color: #402E32;
+        }
+        .accordion-header {
+            cursor: pointer;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 1.25rem;
+            bottom: -1.25rem;
+            width: 2px;
+            background-color: #D4A373;
+        }
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: calc(1rem - 0.5rem + 1px);
+            top: 1.25rem;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 9999px;
+            background-color: #FDFBF8;
+            border: 2px solid #D4A373;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-6 md:p-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-[#A56F3B]">Plano de Treino para Iniciantes</h1>
+            <p class="mt-2 text-lg text-gray-600">Sua jornada para uma vida mais ativa começa aqui!</p>
+        </header>
+
+        <div id="app" class="bg-white/50 rounded-2xl shadow-lg p-4 sm:p-6">
+            
+            <nav class="flex flex-wrap justify-center gap-2 mb-6">
+                <button data-tab="treino" class="tab-button px-4 py-2 rounded-lg transition-colors duration-200">💪 Treino Principal</button>
+                <button data-tab="aquecimento" class="tab-button px-4 py-2 rounded-lg transition-colors duration-200">🔥 Aquecimento</button>
+                <button data-tab="desaquecimento" class="tab-button px-4 py-2 rounded-lg transition-colors duration-200">🧘 Desaquecimento</button>
+                <button data-tab="progresso" class="tab-button px-4 py-2 rounded-lg transition-colors duration-200">🚀 Progressão e Dicas</button>
+            </nav>
+
+            <main>
+                <div id="content-aquecimento" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-4 text-[#A56F3B]">1. Aquecimento (5-7 minutos)</h2>
+                    <p class="mb-6 text-gray-700">Essencial para preparar o corpo e evitar lesões. Faça cada movimento de forma controlada por 30-45 segundos.</p>
+                    <ul class="space-y-3 list-inside list-disc text-gray-800">
+                        <li><strong>Rotação de Articulações:</strong> Gire lentamente os pulsos, tornozelos, ombros e o quadril.</li>
+                        <li><strong>Polichinelos (ou Adaptados):</strong> Se saltar for desconfortável, faça sem impacto, abrindo uma perna e o braço do mesmo lado de cada vez.</li>
+                        <li><strong>Agachamento Livre:</strong> Faça o movimento de sentar, apenas com o peso do corpo, descendo até onde for confortável.</li>
+                        <li><strong>Elevação de Joelhos no Lugar:</strong> Como uma marcha, leve os joelhos em direção ao peito, alternadamente.</li>
+                    </ul>
+                </div>
+
+                <div id="content-treino" class="tab-content">
+                    <h2 class="text-2xl font-bold mb-2 text-[#A56F3B]">2. Treino Principal (15-20 minutos)</h2>
+                    <p class="mb-6 text-gray-700">Foque na execução correta de cada movimento. A qualidade é mais importante que a quantidade.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-6">
+                        <div class="bg-[#EFEBE5] p-3 rounded-lg">
+                            <p class="font-bold text-sm text-[#A56F3B]">SÉRIES</p>
+                            <p class="text-xl font-semibold">2 a 3</p>
+                        </div>
+                        <div class="bg-[#EFEBE5] p-3 rounded-lg">
+                            <p class="font-bold text-sm text-[#A56F3B]">REPETIÇÕES</p>
+                            <p class="text-xl font-semibold">8 a 12</p>
+                        </div>
+                        <div class="bg-[#EFEBE5] p-3 rounded-lg">
+                            <p class="font-bold text-sm text-[#A56F3B]">DESCANSO</p>
+                            <p class="text-xl font-semibold">60-90s</p>
+                        </div>
+                    </div>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                        
+                        <div class="accordion-item bg-[#FDFBF8] rounded-lg border border-[#EFEBE5]">
+                            <div class="accordion-header flex justify-between items-center p-4">
+                                <h3 class="font-bold text-lg">Agachamento Taça (Goblet Squat)</h3>
+                                <span class="accordion-icon text-xl text-[#A56F3B] font-bold transition-transform transform">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 border-t border-[#EFEBE5]">
+                                    <p class="mb-2"><strong>Como fazer:</strong> Segure um kettlebell com as duas mãos, colado ao peito. Mantenha os pés na largura dos ombros. Agache como se fosse sentar, mantendo o peito aberto e as costas retas.</p>
+                                    <p class="mb-2"><strong>Para que serve:</strong> Fortalece pernas, bumbum e ajuda a estabilizar o abdômen.</p>
+                                    <a href="https://www.youtube.com/shorts/gOodeYFJUcI" target="_blank" rel="noopener noreferrer" class="inline-block mb-3 text-sm font-semibold text-[#A56F3B] hover:underline bg-[#EFEBE5] px-3 py-1 rounded-full">🎬 Ver vídeo de exemplo</a>
+                                    <p class="text-sm bg-amber-100 p-2 rounded-md"><strong>💡 Dica de ouro:</strong> O peso na frente ajuda a manter o equilíbrio e a postura correta.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-[#FDFBF8] rounded-lg border border-[#EFEBE5]">
+                            <div class="accordion-header flex justify-between items-center p-4">
+                                <h3 class="font-bold text-lg">Remada Curvada (Bent-Over Row)</h3>
+                                <span class="accordion-icon text-xl text-[#A56F3B] font-bold transition-transform transform">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 border-t border-[#EFEBE5]">
+                                    <p class="mb-2"><strong>Como fazer:</strong> Com um kettlebell em cada mão, incline o tronco para frente a partir do quadril, mantendo as costas retas. Puxe os pesos em direção à barriga, contraindo as costas.</p>
+                                    <p class="mb-2"><strong>Para que serve:</strong> Fortalece as costas e os braços.</p>
+                                    <a href="https://www.youtube.com/shorts/6i4JuUjKNQQ" target="_blank" rel="noopener noreferrer" class="inline-block mb-3 text-sm font-semibold text-[#A56F3B] hover:underline bg-[#EFEBE5] px-3 py-1 rounded-full">🎬 Ver vídeo de exemplo</a>
+                                    <p class="text-sm bg-amber-100 p-2 rounded-md"><strong>💡 Dica de ouro:</strong> Imagine que está tentando "espremer" uma laranja entre as escápulas.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-[#FDFBF8] rounded-lg border border-[#EFEBE5]">
+                            <div class="accordion-header flex justify-between items-center p-4">
+                                <h3 class="font-bold text-lg">Levantamento Terra Romeno</h3>
+                                <span class="accordion-icon text-xl text-[#A56F3B] font-bold transition-transform transform">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 border-t border-[#EFEBE5]">
+                                    <p class="mb-2"><strong>Como fazer:</strong> Segure os kettlebells na frente do corpo. Com as pernas quase retas, empurre o quadril para trás, descendo os pesos rente às pernas. Suba contraindo o bumbum.</p>
+                                    <p class="mb-2"><strong>Para que serve:</strong> Fortalece a parte de trás das coxas e os glúteos.</p>
+                                    <a href="https://www.youtube.com/shorts/wa8eGH-4OJk" target="_blank" rel="noopener noreferrer" class="inline-block mb-3 text-sm font-semibold text-[#A56F3B] hover:underline bg-[#EFEBE5] px-3 py-1 rounded-full">🎬 Ver vídeo de exemplo</a>
+                                    <p class="text-sm bg-amber-100 p-2 rounded-md"><strong>💡 Dica de ouro:</strong> O movimento é uma dobradiça do quadril, não de dobrar a coluna.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-[#FDFBF8] rounded-lg border border-[#EFEBE5]">
+                            <div class="accordion-header flex justify-between items-center p-4">
+                                <h3 class="font-bold text-lg">Supino de Chão (Floor Press)</h3>
+                                <span class="accordion-icon text-xl text-[#A56F3B] font-bold transition-transform transform">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 border-t border-[#EFEBE5]">
+                                    <p class="mb-2"><strong>Como fazer:</strong> Deitada, com joelhos dobrados, segure um kettlebell em cada mão acima do peito. Desça os cotovelos até tocarem levemente o chão e empurre de volta para cima.</p>
+                                    <p class="mb-2"><strong>Para que serve:</strong> Fortalece peito, ombros e a parte de trás dos braços.</p>
+                                    <a href="https://www.youtube.com/shorts/M8cKzRfxKZM" target="_blank" rel="noopener noreferrer" class="inline-block mb-3 text-sm font-semibold text-[#A56F3B] hover:underline bg-[#EFEBE5] px-3 py-1 rounded-full">🎬 Ver vídeo de exemplo</a>
+                                    <p class="text-sm bg-amber-100 p-2 rounded-md"><strong>💡 Dica de ouro:</strong> O chão serve como um limite de segurança para os ombros.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-[#FDFBF8] rounded-lg border border-[#EFEBE5]">
+                            <div class="accordion-header flex justify-between items-center p-4">
+                                <h3 class="font-bold text-lg">Caminhada do Fazendeiro</h3>
+                                <span class="accordion-icon text-xl text-[#A56F3B] font-bold transition-transform transform">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-4 border-t border-[#EFEBE5]">
+                                    <p class="mb-2"><strong>Como fazer:</strong> Segure um kettlebell em cada mão, ao lado do corpo. Mantenha a postura ereta, abdômen contraído, e caminhe por 30-45 segundos.</p>
+                                    <p class="mb-2"><strong>Para que serve:</strong> Melhora a força da pegada, a postura e a estabilidade do corpo todo.</p>
+                                    <a href="https://www.youtube.com/shorts/PcHgih_olY0" target="_blank" rel="noopener noreferrer" class="inline-block mb-3 text-sm font-semibold text-[#A56F3B] hover:underline bg-[#EFEBE5] px-3 py-1 rounded-full">🎬 Ver vídeo de exemplo</a>
+                                    <p class="text-sm bg-amber-100 p-2 rounded-md"><strong>💡 Dica de ouro:</strong> Lute contra a vontade de inclinar o corpo. O desafio é se manter o mais reto possível.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="content-desaquecimento" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-4 text-[#A56F3B]">3. Desaquecimento e Alongamento (5 min)</h2>
+                    <p class="mb-6 text-gray-700">Ajuda a relaxar a musculatura. Segure cada posição por 20-30 segundos, respirando fundo.</p>
+                    <ul class="space-y-3 list-inside list-disc text-gray-800">
+                        <li><strong>Alongamento de Pernas (Quadríceps):</strong> Em pé, apoiada, puxe um pé em direção ao bumbum.</li>
+                        <li><strong>Alongamento de Posteriores:</strong> Sentada, estique as pernas e tente alcançar os pés, sem forçar.</li>
+                        <li><strong>Alongamento de Peito:</strong> Em um portal de porta, apoie os antebraços e incline o corpo para frente.</li>
+                        <li><strong>Alongamento das Costas (Posição da Criança):</strong> De joelhos, sente-se sobre os calcanhares e estique os braços à frente.</li>
+                    </ul>
+                </div>
+                
+                <div id="content-progresso" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-4 text-[#A56F3B]">🚀 Como Evoluir no Futuro</h2>
+                    <p class="mb-6 text-gray-700">A chave é a consistência e a sobrecarga progressiva. Siga este guia para continuar evoluindo de forma segura.</p>
+
+                    <div class="relative pl-8">
+                        <div class="timeline-item pb-10">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-bold">Semanas 1-2: Foco na Técnica</h4>
+                            <p class="text-gray-600">Concentre-se em aprender a forma correta dos exercícios. Faça 2 séries de cada.</p>
+                        </div>
+                        <div class="timeline-item pb-10">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-bold">Semanas 3-4: Aumente o Volume</h4>
+                            <p class="text-gray-600">Se a execução estiver boa, aumente para 3 séries de cada exercício.</p>
+                        </div>
+                        <div class="timeline-item pb-10">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-bold">Semanas 5-6: Aumente a Intensidade</h4>
+                            <p class="text-gray-600">Tente diminuir o tempo de descanso entre as séries para 60 segundos.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-bold">Daí em diante: Novos Desafios</h4>
+                            <p class="text-gray-600">Quando se sentir confiante, considere kettlebells mais pesados ou variações mais difíceis dos exercícios.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold mt-10 mb-4 text-[#A56F3B]">Conselhos Finais</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start"><span class="mr-2">✔️</span> <strong>Veja vídeos:</strong> Se tiver dúvidas, procure o nome do exercício no YouTube para ver a execução.</li>
+                        <li class="flex items-start"><span class="mr-2">✔️</span> <strong>Seja paciente:</strong> Os benefícios para a saúde começam no primeiro dia. O resultado visual é consequência da consistência.</li>
+                        <li class="flex items-start"><span class="mr-2">✔️</span> <strong>Escute seu corpo:</strong> Dor muscular leve é normal. Dor aguda em articulações é sinal para parar.</li>
+                        <li class="flex items-start"><span class="mr-2">✔️</span> <strong>Celebre cada treino:</strong> O passo mais difícil é começar. Cada treino concluído é uma vitória!</li>
+                    </ul>
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            const accordions = document.querySelectorAll('.accordion-item');
+            
+            const setActiveTab = (tabId) => {
+                tabs.forEach(tab => {
+                    if (tab.dataset.tab === tabId) {
+                        tab.classList.add('tab-active');
+                        tab.classList.remove('tab-inactive');
+                    } else {
+                        tab.classList.add('tab-inactive');
+                        tab.classList.remove('tab-active');
+                    }
+                });
+
+                contents.forEach(content => {
+                    if (content.id === `content-${tabId}`) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    setActiveTab(tab.dataset.tab);
+                });
+            });
+
+            accordions.forEach(accordion => {
+                const header = accordion.querySelector('.accordion-header');
+                const content = accordion.querySelector('.accordion-content');
+                const icon = accordion.querySelector('.accordion-icon');
+
+                header.addEventListener('click', () => {
+                    const isOpen = content.classList.contains('open');
+                    
+                    accordions.forEach(item => {
+                        item.querySelector('.accordion-content').classList.remove('open');
+                        item.querySelector('.accordion-icon').textContent = '+';
+                        item.querySelector('.accordion-icon').classList.remove('rotate-45');
+                    });
+
+                    if (!isOpen) {
+                        content.classList.add('open');
+                        icon.textContent = '−';
+                        icon.classList.add('rotate-45');
+                    }
+                });
+            });
+
+            setActiveTab('treino');
+        });
+    </script>
+
+</body>
+</html>
